@@ -12,7 +12,7 @@ Le disque est constitué d'une partie réfléchissante et d'une partie mat (voir
 
 ![Photo du compteur](images/compteur.jpg)
 
-Afin de détecter la rotation le disque, j'ai utilisé un capteur TCRT5000 disposant d'une LED émettrice IR et d'un photo-transistor dans le même boitier.
+Afin de détecter la rotation le disque, j'ai utilisé un capteur [TCRT5000](docs/tcrt5000.pdf)disposant d'une LED émettrice IR et d'un photo-transistor dans le même boitier.
 Il est possible de trouver ces capteurs sur des cartes autonomes avec un amplificateur opérationnel et une résistance ajustable pour un prix très intéressant.
 
 J'ai collé au double face le capteur avec une méthode très approximative mais cela fonctionne très bien, j'ai cependant prévu de faire une pièce imprimable en 3D afin de faciliter l'installation.
