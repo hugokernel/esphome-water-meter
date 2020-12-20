@@ -19,6 +19,29 @@ J'ai collé au double face le capteur avec une méthode très approximative mais
 
 ![Photo du compteur avec le capteur posé dessus](images/installation.jpg)
 
+## Caractéristiques
+
+### Mesures de consommation
+
+* Consommation journalière
+* Consommation hebdomadaire
+* Consommation mensuelle
+* Consommation annuelle
+* Consommation primaire / secondaire: Des compteurs qu'il est possible de remettre à 0 à tout moment afin d'effectuer des mesures en tout genre
+* Consommation courante: Indique la consommation instantanée
+* Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption sans arrêt de plus de 5 minute)
+
+### Statut
+
+L'état de fonctionnement du compteur est visible via une LED WS2812 qui clignote en vert à intervalle régulier.
+
+### Mesures annexes
+
+Le compteur étant situé dans la cave, j'ai profité de cette installation pour mesurer la température et l'humidité via un capteur AM3220 (que je ne recommande pas d'ailleurs).
+
+Un capteur de lumière (LDR) permet également de savoir si la lumière est allumé dans la cave indiquant alors un probable oubli d'extinction de cette dernière.
+La mesure de luminosité se fait au moment ou la lumière est éteinte afin d'éviter que la LED de statut ne perturbe la mesure.
+
 ## Fonctionnement
 
 Le fonctionnement est assez simple et la partie YAML la plus importante est reportée ci-dessous:
@@ -72,29 +95,6 @@ sensor:
       - multiply: 0.0167
       - lambda: return abs(x);
 ```
-
-## Particularités
-
-### Mesures de consommation
-
-* Consommation journalière
-* Consommation hebdomadaire
-* Consommation mensuelle
-* Consommation annuelle
-* Consommation primaire / secondaire: Des compteurs qu'il est possible de remettre à 0 à tout moment afin d'effectuer des mesures en tout genre
-* Consommation courante: Indique la consommation instantanée
-* Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption sans arrêt de plus de 5 minute)
-
-### Statut
-
-L'état de fonctionnement du compteur est visible via une LED WS2812 qui clignote en vert à intervalle régulier.
-
-### Mesures annexes
-
-Le compteur étant situé dans la cave, j'ai profité de cette installation pour mesurer la température et l'humidité via un capteur AM3220 (que je ne recommande pas d'ailleurs).
-
-Un capteur de lumière (LDR) permet également de savoir si la lumière est allumé dans la cave indiquant alors un probable oubli d'extinction de cette dernière.
-La mesure de luminosité se fait au moment ou la lumière est éteinte afin d'éviter que la LED de statut ne perturbe la mesure.
 
 ## Fichiers
 
