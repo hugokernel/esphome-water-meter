@@ -1,50 +1,52 @@
 # ESPHome Water Meter
 
+Read this in other languages: [French](README.fr.md)
+
 ![Photo du boitier contenant l'électronique](images/boitier.jpg)
 
-## Présentation
+## Presentation
 
-Si vous possédez un compteur d'eau (Sensu R-315 pour ma part), ce dernier dispose peut être d'un indicateur vous permettant de connaitre assez précisément la consommation courante.
-Son fonctionnement est assez simple, un disque (voir photo) visible dans le cadran du compteur tourne à une vitesse proportionnelle au débit d'eau circulant.
-Il est conçu pour que chaque révolution complète corresponde à un 1L d'eau.
+If you have a water meter (Sensu R-315 for my part), it may have an indicator allowing you to know the current consumption fairly accurately.
+Its operation is quite simple, a disc (see photo) visible in the dial of the meter rotates at a speed proportional to the flow of circulating water.
+It is designed so that each complete revolution corresponds to 1L of water.
 
-Le disque est constitué d'une partie réfléchissante et d'une partie mat (voir photo ci-dessous), ainsi, en utilisant un capteur adapté, il est possible de détecter la rotation du disque et donc d'en déduire la consommation courante de votre compteur.
+The disc consists of a reflective part and a matt part (see photo below), so, by using an adapted sensor, it is possible to detect the rotation of the disc and thus to deduce the current consumption of your meter.
 
-![Photo du compteur](images/compteur.jpg)
+![Water meter photo](images/compteur.jpg)
 
-Afin de détecter la rotation le disque, j'ai utilisé un capteur [TCRT5000](docs/tcrt5000.pdf)disposant d'une LED émettrice IR et d'un photo-transistor dans le même boitier.
-Il est possible de trouver ces capteurs sur des cartes autonomes avec un amplificateur opérationnel et une résistance ajustable pour un prix très intéressant.
+In order to detect the rotation of the disk, I used a sensor [TCRT5000](docs/tcrt5000.pdf) with an IR emitting LED and a photo-transistor in the same case.
+It is possible to find these sensors on stand-alone boards with an operational amplifier and an adjustable resistor for a very interesting price.
 
-J'ai collé au double face le capteur avec une méthode très approximative mais cela fonctionne très bien, j'ai cependant prévu de faire une pièce imprimable en 3D afin de faciliter l'installation.
+I glued the sensor on both sides with a very approximate method but it works very well, however I plan to make a 3D printable part to facilitate the installation.
 
-![Photo du compteur avec le capteur posé dessus](images/installation.jpg)
+![Photo of the meter with the sensor placed on it](images/installation.jpg)
 
-## Caractéristiques
+## Features
 
-### Mesures de consommation
+### Consumption measurements
 
-* Consommation journalière
-* Consommation hebdomadaire
-* Consommation mensuelle
-* Consommation annuelle
-* Consommation primaire / secondaire: Des compteurs qu'il est possible de remettre à 0 à tout moment afin d'effectuer des mesures en tout genre
-* Consommation courante: Indique la consommation instantanée
-* Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption sans arrêt de plus de 5 minute)
+* Daily consumption
+* Weekly consumption
+* Monthly consumption
+* Annual consumption
+* Primary / secondary consumption: Meters that can be reset to 0 at any time to perform any kind of measurement.
+* Current consumption: Indicates the instantaneous consumption.
+* Last consumption: Indicates the last consumption (the measurement continues as long as the meter is running without interruption without stopping for more than 5 minutes).
 
-### Statut
+### Status
 
-L'état de fonctionnement du compteur est visible via une LED WS2812 qui clignote en vert à intervalle régulier.
+The operating status of the meter is visible via a WS2812 LED that flashes green at regular intervals.
 
-### Mesures annexes
+### Measurements
 
-Le compteur étant situé dans la cave, j'ai profité de cette installation pour mesurer la température et l'humidité via un capteur AM3220 (que je ne recommande pas d'ailleurs).
+The meter being located in the cellar, I took advantage of this installation to measure the temperature and humidity via an AM3220 sensor (which I don't recommend by the way).
 
-Un capteur de lumière (LDR) permet également de savoir si la lumière est allumé dans la cave indiquant alors un probable oubli d'extinction de cette dernière.
-La mesure de luminosité se fait au moment ou la lumière est éteinte afin d'éviter que la LED de statut ne perturbe la mesure.
+A light sensor (LDR) also allows me to know if the light is on in the cellar indicating a probable omission of extinction of the latter.
+The brightness measurement is done at the moment the light is switched off to avoid the status LED to disturb the measurement.
 
-## Fonctionnement
+## Operation
 
-Le fonctionnement est assez simple et la partie YAML la plus importante est reportée ci-dessous:
+The operation is quite simple and the most important YAML part is shown below:
 
 ```yaml
 binary_sensor:
@@ -69,13 +71,13 @@ binary_sensor:
        - script.execute: publish_states
 ```
 
-Un capteur numérique est déclaré et utilise l'entrée / sortie numérique 18 sur laquelle est branchée le TCRT5000.
+A digital sensor is declared and uses the digital input/output 18 on which the TCRT5000 is connected.
 
-Un filtre permet de supprimer les impulsions parasites en provenance du capteur si son état n'est pas défini durant plus de 50 milli-secondes.
+A filter allows to suppress parasitic pulses coming from the sensor if its state is not defined during more than 50 milli-seconds.
 
-Une fois le filtre passé, on atterrit dans la lambda ou le code C est exécuté et qui consiste simplement à incrémenter des globales définies plus haut.
+Once the filter is passed, we land in the lambda or C code is executed and which simply consists in incrementing the global defined above.
 
-Une autre partie déclare un capteur de type compteur d'impulsion qui permet de connaître la consommation instantanée.
+Another part declares a pulse counter type sensor which allows to know the instantaneous consumption.
 
 ```yaml
 sensor:
@@ -96,8 +98,8 @@ sensor:
       - lambda: return abs(x);
 ```
 
-## Fichiers
+## Files
 
-* watermeter.yaml: Le fichier de configuration ESPHome
-* network.yaml: Les informations de votre réseau
-* secrets.yaml: Les informations secrètes relatives à votre réseau
+* watermeter.yaml: The ESPHome configuration file
+* network.yaml: Your network information
+* secrets.yaml: The secret information about your network.
