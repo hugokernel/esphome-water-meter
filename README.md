@@ -31,7 +31,7 @@ I glued the sensor on both sides with a very approximate method but it works ver
 * Annual consumption
 * Primary / secondary consumption: Meters that can be reset to 0 at any time to perform any kind of measurement.
 * Current consumption: Indicates the instantaneous consumption.
-* Last consumption: Indicates the last consumption (the measurement continues as long as the meter is running without interruption without stopping for more than 5 minutes).
+* Last consumption: Indicates the last consumption (the measurement continues as long as the meter is running without interruption for more than 5 minutes).
 
 ### Status
 

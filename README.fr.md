@@ -31,7 +31,7 @@ J'ai collé au double face le capteur avec une méthode très approximative mais
 * Consommation annuelle
 * Consommation primaire / secondaire: Des compteurs qu'il est possible de remettre à 0 à tout moment afin d'effectuer des mesures en tout genre
 * Consommation courante: Indique la consommation instantanée
-* Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption sans arrêt de plus de 5 minute)
+* Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption de plus de 5 minutes)
 
 ### Statut
 
