@@ -33,16 +33,24 @@ J'ai collé au double face le capteur avec une méthode très approximative mais
 * Consommation courante: Indique la consommation instantanée
 * Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption de plus de 5 minutes)
 
-### Statut
+## Update
 
-L'état de fonctionnement du compteur est visible via une LED WS2812 qui clignote en vert à intervalle régulier.
+### 2024-01-15
 
-### Mesures annexes
+* Updated using `pulse_meter` integration (used for several months with much better accuracy)
+* Removed parts not directly related to water consumption measurement (led, temperature measurement)
+* Having changed my meter, I no longer intend to designate a suitable support for the Sensu R-315 meter.
 
-Le compteur étant situé dans la cave, j'ai profité de cette installation pour mesurer la température et l'humidité via un capteur AM3220 (que je ne recommande pas d'ailleurs).
+## Réglage
 
-Un capteur de lumière (LDR) permet également de savoir si la lumière est allumé dans la cave indiquant alors un probable oubli d'extinction de cette dernière.
-La mesure de luminosité se fait au moment ou la lumière est éteinte afin d'éviter que la LED de statut ne perturbe la mesure.
+Vous devez modifier la valeur `pulse_gpio` que vous utilisez pour l'entrée:
+
+```yaml
+substitutions:
+  name: watermeter
+  friendly_name: "Water meter"
+  pulse_gpio: GPIO18
+```
 
 ## Fonctionnement
 
@@ -51,10 +59,11 @@ Le fonctionnement est assez simple et la partie YAML la plus importante est repo
 ```yaml
 binary_sensor:
   # TCRT5000 pulse counter
-  # IO18 / GPIO18
   - platform: gpio
     id: water_pulse
-    pin: GPIO18
+    pin:
+      number: $pulse_gpio
+      allow_other_uses: true
     internal: true
     filters:
        - delayed_on_off: 50ms
@@ -81,21 +90,17 @@ Une autre partie déclare un capteur de type compteur d'impulsion qui permet de 
 
 ```yaml
 sensor:
-  # TCRT5000 pulse counter
-  # IO18 / GPIO18
-  - platform: pulse_counter
+  - platform: pulse_meter
     id: water_pulse_counter
     name: "${friendly_name} water consumption"
-    pin: GPIO18
-    update_interval: 2sec
-    internal_filter: 10us
+    pin:
+      number: $pulse_gpio
+      allow_other_uses: true
+    internal_filter: 100ms
     unit_of_measurement: "L/min"
-    accuracy_decimals: 0
+    accuracy_decimals: 2
+    timeout: 30s
     icon: "mdi:water"
-    filters:
-      # Divide by 60
-      - multiply: 0.0167
-      - lambda: return abs(x);
 ```
 
 ## Fichiers
