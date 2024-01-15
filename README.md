@@ -33,16 +33,16 @@ I glued the sensor on both sides with a very approximate method but it works ver
 * Current consumption: Indicates the instantaneous consumption.
 * Last consumption: Indicates the last consumption (the measurement continues as long as the meter is running without interruption for more than 5 minutes).
 
-### Status
+## Setup
 
-The operating status of the meter is visible via a WS2812 LED that flashes green at regular intervals.
+First, you need to set the `pulse_gpio` used as input:
 
-### Measurements
-
-The meter being located in the cellar, I took advantage of this installation to measure the temperature and humidity via an AM3220 sensor (which I don't recommend by the way).
-
-A light sensor (LDR) also allows me to know if the light is on in the cellar indicating a probable omission of extinction of the latter.
-The brightness measurement is done at the moment the light is switched off to avoid the status LED to disturb the measurement.
+```yaml
+substitutions:
+  name: watermeter
+  friendly_name: "Water meter"
+  pulse_gpio: GPIO18
+```
 
 ## Operation
 
@@ -51,10 +51,11 @@ The operation is quite simple and the most important YAML part is shown below:
 ```yaml
 binary_sensor:
   # TCRT5000 pulse counter
-  # IO18 / GPIO18
   - platform: gpio
     id: water_pulse
-    pin: GPIO18
+    pin:
+      number: $pulse_gpio
+      allow_other_uses: true
     internal: true
     filters:
        - delayed_on_off: 50ms
@@ -81,21 +82,17 @@ Another part declares a pulse counter type sensor which allows to know the insta
 
 ```yaml
 sensor:
-  # TCRT5000 pulse counter
-  # IO18 / GPIO18
-  - platform: pulse_counter
+  - platform: pulse_meter
     id: water_pulse_counter
     name: "${friendly_name} water consumption"
-    pin: GPIO18
-    update_interval: 2sec
-    internal_filter: 10us
+    pin:
+      number: $pulse_gpio
+      allow_other_uses: true
+    internal_filter: 100ms
     unit_of_measurement: "L/min"
-    accuracy_decimals: 0
+    accuracy_decimals: 2
+    timeout: 30s
     icon: "mdi:water"
-    filters:
-      # Divide by 60
-      - multiply: 0.0167
-      - lambda: return abs(x);
 ```
 
 ## Files
