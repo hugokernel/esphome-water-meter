@@ -1,5 +1,3 @@
-.script_flashing: !include &flashing libraries/scripts/flashing.yaml
-
 substitutions:
   name: watermeter
   friendly_name: "Water meter"
@@ -13,7 +11,6 @@ esphome:
     priority: -10
     then:
       - script.execute: publish_states
-      - script.execute: flashing
 
 <<: !include network.yaml
 
@@ -32,9 +29,6 @@ api:
 
 ota:
   password: !secret password
-
-logger:
-  level: INFO # Flashing effect generate too many debug log
 
 # Documentations:
 # https://github.com/esphome/issues/issues/664
@@ -84,18 +78,7 @@ globals:
    restore_value: no
    initial_value: '0'
 
- - id: higher_resistance
-   type: float
-   restore_value: yes
-   initial_value: '0'
-
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-
 script:
-  - <<: *flashing
-
   - id: reset_main_counter
     then:
       - lambda: |-
@@ -119,47 +102,12 @@ script:
           id(water_yearly_consumption).publish_state(id(yearly_counter_pulses));
           id(current_water_consumption).publish_state(id(event_quantity));
 
-  - id: test_ldr
-    mode: single
-    then:
-      # Leave time to LDR
-      - delay: 5sec
-      - lambda: |-
-          id(higher_resistance) = max(id(ldr_sensor).state, id(higher_resistance));
-      - logger.log:
-          level: INFO
-          format: "> Resistance: %.1f < %.1f"
-          args: ['id(ldr_sensor).state', 'id(higher_resistance) / 3']
-      - if:
-          condition:
-            lambda: "return (id(ldr_sensor).state < id(higher_resistance) / 3);"
-          then:
-            - binary_sensor.template.publish:
-                id: light_detector
-                state: ON
-          else:
-            - binary_sensor.template.publish:
-                id: light_detector
-                state: OFF
-
 sensor:
   - platform: uptime
     name: "${friendly_name} uptime"
 
   - platform: wifi_signal
     name: "${friendly_name} WiFi signal"
-
-  - platform: am2320
-    # Fix the "Communication with AM2320 failed!" problem
-    # From https://github.com/esphome/issues/issues/192#issuecomment-481171704
-    # Fixed: the initial problem was fixed by adding external 4.7kOhms pullups
-    # on SDA/SCL lines.
-    #setup_priority: -100
-    temperature:
-      name: "${friendly_name} temperature"
-    humidity:
-      name: "${friendly_name} humidity"
-    update_interval: 60s
 
   - platform: pulse_meter
     id: water_pulse_counter
@@ -239,27 +187,6 @@ sensor:
     accuracy_decimals: 0
     icon: "mdi:water"
 
-  - platform: adc
-    id: source_sensor
-    name: "${friendly_name} adc"
-    pin: GPIO33
-    attenuation: 11db
-    internal: true
-    update_interval: 200ms
-    filters:
-      - multiply: 0.846153 # 3.9 (11db attenuation full-scale voltage) -> 3.3V
-      - median:
-          window_size: 5
-          send_every: 3
-
-  - platform: resistance
-    id: ldr_sensor
-    sensor: source_sensor
-    configuration: UPSTREAM
-    resistor: 10kOhm
-    reference_voltage: 3.3V
-    name: "${friendly_name} LDR resistance"
-
 binary_sensor:
   # TCRT5000 pulse counter
   - platform: gpio
@@ -282,11 +209,6 @@ binary_sensor:
     on_state:
        - script.execute: publish_states
 
-  - platform: template
-    id: light_detector
-    name: "${friendly_name} light detector"
-    device_class: light
-
 switch:
   - platform: template
     name: "${friendly_name} reset main counter button"
@@ -302,18 +224,6 @@ switch:
 
   - platform: restart
     name: "${friendly_name} restart"
-
-light:
-  - platform: fastled_clockless
-    chipset: WS2812
-    id: status_light
-    name: "${friendly_name} status light"
-    pin: GPIO27
-    num_leds: 1
-    rgb_order: GRB
-    restore_mode: ALWAYS_OFF
-    on_turn_off:
-      - script.execute: test_ldr
 
 time:
   - platform: sntp
