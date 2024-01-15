@@ -3,6 +3,7 @@
 substitutions:
   name: watermeter
   friendly_name: "Water meter"
+  pulse_gpio: GPIO18
 
 esphome:
   name: $name
@@ -160,21 +161,17 @@ sensor:
       name: "${friendly_name} humidity"
     update_interval: 60s
 
-  # TCRT5000 pulse counter
-  # IO18 / GPIO18
-  - platform: pulse_counter
+  - platform: pulse_meter
     id: water_pulse_counter
     name: "${friendly_name} water consumption"
-    pin: GPIO18
-    update_interval: 2sec
-    internal_filter: 10us
+    pin:
+      number: $pulse_gpio
+      allow_other_uses: true
+    internal_filter: 100ms
     unit_of_measurement: "L/min"
-    accuracy_decimals: 0
+    accuracy_decimals: 2
+    timeout: 30s
     icon: "mdi:water"
-    filters:
-      # Divide by 60
-      - multiply: 0.0167
-      - lambda: return abs(x);
 
   # Value calculated are not consistent
   #- platform: integration
@@ -265,10 +262,11 @@ sensor:
 
 binary_sensor:
   # TCRT5000 pulse counter
-  # IO18 / GPIO18
   - platform: gpio
     id: water_pulse
-    pin: GPIO18
+    pin:
+      number: $pulse_gpio
+      allow_other_uses: true
     internal: true
     filters:
        - delayed_on_off: 50ms
