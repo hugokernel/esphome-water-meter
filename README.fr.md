@@ -33,13 +33,13 @@ J'ai collé au double face le capteur avec une méthode très approximative mais
 * Consommation courante: Indique la consommation instantanée
 * Dernière consommation: Indique la dernière consommation (la mesure continue tant que le compteur tourne sans interruption de plus de 5 minutes)
 
-## Update
+## Mises à jour
 
 ### 2024-01-15
 
-* Updated using `pulse_meter` integration (used for several months with much better accuracy)
-* Removed parts not directly related to water consumption measurement (led, temperature measurement)
-* Having changed my meter, I no longer intend to designate a suitable support for the Sensu R-315 meter.
+* Mise à jour en utilisant l'intégration `pulse_meter` (utilisé depuis plusieurs mois avec une bien meilleur précision)
+* Suppression des parties n'étant pas directement en rapport avec la mesure de consommation d'eau (led, mesure température)
+* Ayant changer de compteur, je n'ai plus l'intention de désigner un support adapté pour le compteur Sensu R-315
 
 ## Réglage
 

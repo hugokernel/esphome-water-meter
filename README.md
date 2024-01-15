@@ -33,6 +33,14 @@ I glued the sensor on both sides with a very approximate method but it works ver
 * Current consumption: Indicates the instantaneous consumption.
 * Last consumption: Indicates the last consumption (the measurement continues as long as the meter is running without interruption for more than 5 minutes).
 
+## Updates
+
+### 2024-01-15
+
+* Updated using `pulse_meter` integration (used for several months with much better accuracy)
+* Removed parts not directly related to water consumption measurement (led, temperature measurement)
+* Having changed my meter, I no longer intend to designate a suitable support for the Sensu R-315 meter.
+
 ## Setup
 
 First, you need to set the `pulse_gpio` used as input:
