@@ -213,13 +213,13 @@ binary_sensor:
 
 switch:
   - platform: template
-    name: "${friendly_name} reset main counter button"
+    name: "${friendly_name} reset main counter"
     icon: "mdi:restart"
     turn_on_action:
       - script.execute: reset_main_counter
 
   - platform: template
-    name: "${friendly_name} reset secondary counter button"
+    name: "${friendly_name} reset secondary counter"
     icon: "mdi:restart"
     turn_on_action:
       - script.execute: reset_secondary_counter
