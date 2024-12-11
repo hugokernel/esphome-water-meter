@@ -151,6 +151,8 @@ sensor:
     unit_of_measurement: "L"
     accuracy_decimals: 0
     icon: "mdi:water"
+    device_class: water
+    state_class: total_increasing
 
   - platform: template
     id: water_weekly_consumption
