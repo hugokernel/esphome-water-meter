@@ -294,7 +294,7 @@ interval:
 
                   // Send event to Home Assistant
                   api::HomeAssistantServiceCallAction<> *api;
-                  api = new api::HomeAssistantServiceCallAction<>(api_apiserver, true);
+                  api = new api::HomeAssistantServiceCallAction<>(api_apiserver_id, true);
                   // Event id length limit is 32 characters
                   api->set_service("esphome.last_consumption_changes");
                   api->play();
